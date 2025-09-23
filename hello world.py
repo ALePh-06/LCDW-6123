@@ -1,2 +1,5 @@
+import datetime
+currentdatetime = datetime.datetime.now()
 print('hello world')
-'''hello'''
+'''cat'''
+print(currentdatetime)
