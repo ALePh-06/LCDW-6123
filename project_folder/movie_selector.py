@@ -31,10 +31,9 @@ def get_available_years():
     return rows
 
 def fetch_all_movies():
-    """Return all movies with their concatenated genres."""
     conn = connect_db()
     cur = conn.cursor()
-    query = """
+    query ="""
       SELECT Movie.Id, Movie.Name, Movie.Year, Movie.Rating,
              GROUP_CONCAT(Genre.Genre_name, ', ') AS Genres
       FROM Movie
@@ -49,13 +48,6 @@ def fetch_all_movies():
     return [{"id": r[0], "title": r[1], "year": r[2], "rating": r[3], "genres": r[4] or ""} for r in rows]
 
 def apply_filters(selected_genres, selected_years, min_rating, require_all_genres=False):
-    """
-    selected_genres : list of strings (genre names, case-insensitive)
-    selected_years  : list of ints
-    min_rating      : float or None
-    require_all_genres: if True, only return movies that have ALL selected_genres
-                        if False (default), return movies that have ANY of selected_genres
-    """
     conn = connect_db()
     cur = conn.cursor()
 
@@ -114,7 +106,6 @@ def display_movies(movie_list):
 
 # Menus
 def prompt_choose_genres(current_selection):
-    """Let user pick genres by name or by index from available list."""
     available = get_available_genres()
     if not available:
         print("No genres found in Database.")
