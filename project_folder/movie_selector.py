@@ -64,7 +64,7 @@ def apply_filters(selected_genres, selected_years, min_rating, require_all_genre
     # Genre filter 
     if selected_genres:
         placeholders = ",".join("?" for _ in selected_genres)
-        # restrict rows to those genres (we count later if require_all_genres)
+        # restrict rows to those genres
         base += f" AND lower(Genre.Genre_name) IN ({placeholders})"
         params.extend([g.lower() for g in selected_genres])
 
@@ -108,7 +108,7 @@ def display_movies(movie_list):
 def prompt_choose_genres(current_selection):
     available = get_available_genres()
     if not available:
-        print("No genres found in Database.")
+        print("No genres found in database.")
         return []
 
     print("\nAvailable genres:")
@@ -132,7 +132,7 @@ def prompt_choose_genres(current_selection):
             if 0 <= idx < len(available):
                 chosen.append(available[idx])
             else:
-                print(f"Index {tok} is out of range, ignoring.")
+                print(f"Index {tok} is out of range.")
         return chosen
     else:
         chosen = []
@@ -144,14 +144,14 @@ def prompt_choose_genres(current_selection):
                 clear_terminal()
             else:
                 clear_terminal()
-                print(f"Genre '{tok}' not found — ignoring.")
+                print(f"Genre '{tok}' not found.")
         return chosen
 
 def prompt_choose_years(current_selection):
     available = get_available_years()
     if not available:
         clear_terminal()
-        print("No years found in DB.")
+        print("No years found in database.")
         return []
     clear_terminal()
     print("\nAvailable years:")
