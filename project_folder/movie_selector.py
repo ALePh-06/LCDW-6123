@@ -1,9 +1,3 @@
-"""
-Terminal Movie Selector - SQLite version
-Assumes database.db has tables: Movie (Id, Name, Year, Rating),
-Genre (Id, Genre_name), Movie_Genre (Id, Movie_Id, Genre_Id)
-"""
-
 import sqlite3
 import os
 # DB pathing
@@ -291,7 +285,8 @@ def main():
             else:
                 clear_terminal()
                 print("Invalid choice, try again.")
-    except FileNotFoundError as e:
+        #Error Handling for DB Issues
+    except FileNotFoundError as e: 
         print("ERROR:", e)
     except sqlite3.OperationalError as e:
         print("Database error:", e)
