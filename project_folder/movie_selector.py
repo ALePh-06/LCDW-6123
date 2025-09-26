@@ -1,4 +1,3 @@
-
 """
 Terminal Movie Selector - SQLite version
 Assumes database.db has tables: Movie (Id, Name, Year, Rating),
@@ -8,12 +7,11 @@ Genre (Id, Genre_name), Movie_Genre (Id, Movie_Id, Genre_Id)
 import sqlite3
 import os
 
-# If your DB is in a different location, change this path
 basedir = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(basedir, 'database.db')
 
-
-
+def clear_terminal():
+    os.system("cls" if os.name == "nt" else "clear")
 
 # -------------------------
 # Database helpers
@@ -113,8 +111,8 @@ def apply_filters(selected_genres, selected_years, min_rating, require_all_genre
 
 
 # Display helpers
-
 def display_movies(movie_list):
+    clear_terminal()
     if not movie_list:
         print("\n⚠️  No movies found with your filters.\n")
         return
@@ -123,24 +121,23 @@ def display_movies(movie_list):
         print(f"🎬 {m['title']} ({m['year']}) - {m['genres']} | ⭐ {m['rating']}")
     print()
 
-
 # Menus
-
 def prompt_choose_genres(current_selection):
     """Let user pick genres by name or by index from available list."""
     available = get_available_genres()
     if not available:
-        print("No genres found in DB.")
+        print("No genres found in Database.")
         return []
 
     print("\nAvailable genres:")
     for i, g in enumerate(available, start=1):
         print(f"  {i}. {g}")
 
-    print("\nYou may:")
+    print("\nYou may only choose either one:")
     print("- Enter genre names separated by commas (e.g. Action, Comedy)")
     print("- OR enter indices separated by commas (e.g. 1,3)")
-    print("- Press Enter to keep current selection")
+    print("")
+    print("Please press Enter to keep current selection")
     raw = input(f"Selected genres [{', '.join(current_selection) if current_selection else 'none'}]: ").strip()
     if raw == "":
         return current_selection
@@ -164,16 +161,19 @@ def prompt_choose_genres(current_selection):
             key = tok.lower()
             if key in lower_map:
                 chosen.append(lower_map[key])
+                clear_terminal()
             else:
+                clear_terminal()
                 print(f"Genre '{tok}' not found — ignoring.")
         return chosen
 
 def prompt_choose_years(current_selection):
     available = get_available_years()
     if not available:
+        clear_terminal()
         print("No years found in DB.")
         return []
-
+    clear_terminal()
     print("\nAvailable years:")
     print(", ".join(str(y) for y in available))
 
@@ -185,8 +185,14 @@ def prompt_choose_years(current_selection):
     years = []
     for tok in tokens:
         if tok.isdigit():
-            years.append(int(tok))
+            clear_terminal()
+            year = int(tok)
+            if year in available:
+                years.append(year)
+            else:
+                print(f"Ignoring unavailable year '{year}'.")
         else:
+            clear_terminal()
             print(f"Ignoring invalid year '{tok}'.")
     return years
 
@@ -215,12 +221,15 @@ def filter_menu():
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
+            clear_terminal()
             selected_genres = prompt_choose_genres(selected_genres)
 
         elif choice == "2":
+            clear_terminal()
             selected_years = prompt_choose_years(selected_years)
 
         elif choice == "3":
+            clear_terminal()
             raw = input("Enter minimum rating (e.g. 8.0) or blank to keep current: ").strip()
             if raw == "":
                 pass
@@ -231,10 +240,12 @@ def filter_menu():
                     print("Invalid rating input — please use a number like 7.5")
 
         elif choice == "4":
+            clear_terminal()
             genre_match_all = not genre_match_all
             print(f"Genre match mode set to: {'ALL' if genre_match_all else 'ANY'}")
 
         elif choice == "5":
+            clear_terminal()
             print("\n🎬 Filtered Results:\n")
             results = apply_filters(selected_genres, selected_years, min_rating, require_all_genres=genre_match_all)
             display_movies(results)
@@ -243,12 +254,15 @@ def filter_menu():
             selected_genres = []
             selected_years = []
             min_rating = None
+            clear_terminal()
             print("Filters cleared!")
 
         elif choice == "7":
+            clear_terminal()
             break
 
         else:
+            clear_terminal()
             print("Invalid choice, try again!")
 
 def main_menu():
@@ -261,19 +275,23 @@ def main_menu():
     print("=" * 60)
 
 def main():
+    clear_terminal()
     try:
         while True:
             main_menu()
             ch = input("Enter your choice (1-3): ").strip()
             if ch == "1":
+                clear_terminal()
                 movies = fetch_all_movies()
                 display_movies(movies)
             elif ch == "2":
+                clear_terminal()
                 filter_menu()
             elif ch == "3":
                 print("\nThank you for using Movie Selector! Goodbye 👋\n")
                 break
             else:
+                clear_terminal()
                 print("Invalid choice, try again.")
     except FileNotFoundError as e:
         print("ERROR:", e)
