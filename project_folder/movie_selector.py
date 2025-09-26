@@ -9,7 +9,9 @@ import sqlite3
 import os
 
 # If your DB is in a different location, change this path
-DB_PATH = r"C:\Users\Cyclo\OneDrive\Desktop\LCDW-6123\project_folder\database.db"
+basedir = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.path.join(basedir, 'database.db')
+
 
 
 
