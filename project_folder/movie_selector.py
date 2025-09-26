@@ -6,16 +6,15 @@ Genre (Id, Genre_name), Movie_Genre (Id, Movie_Id, Genre_Id)
 
 import sqlite3
 import os
-
+# DB pathing
 basedir = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(basedir, 'database.db')
 
 def clear_terminal():
     os.system("cls" if os.name == "nt" else "clear")
 
-# -------------------------
+
 # Database helpers
-# -------------------------
 def connect_db():
     if not os.path.exists(DB_PATH):
         raise FileNotFoundError(f"Database not found at '{DB_PATH}'. Put database.db next to this script or update DB_PATH.")
@@ -94,11 +93,10 @@ def apply_filters(selected_genres, selected_years, min_rating, require_all_genre
         base += " AND Movie.Rating >= ?"
         params.append(min_rating)
 
-    # Group + HAVING (used only when checking "all genres")
+    # Group + HAVING 
     base += " GROUP BY Movie.Id"
 
     if selected_genres and require_all_genres:
-        # ensure the movie matched all requested genres
         base += " HAVING COUNT(DISTINCT lower(Genre.Genre_name)) >= ?"
         params.append(len(selected_genres))
 
@@ -109,8 +107,7 @@ def apply_filters(selected_genres, selected_years, min_rating, require_all_genre
     conn.close()
     return [{"id": r[0], "title": r[1], "year": r[2], "rating": r[3], "genres": r[4] or ""} for r in rows]
 
-
-# Display helpers
+# Display if movie not found
 def display_movies(movie_list):
     clear_terminal()
     if not movie_list:
@@ -143,7 +140,6 @@ def prompt_choose_genres(current_selection):
         return current_selection
 
     tokens = [t.strip() for t in raw.split(",") if t.strip()]
-    # if tokens are all integers => interpret as indices
     if tokens and all(tok.isdigit() for tok in tokens):
         chosen = []
         for tok in tokens:
@@ -154,7 +150,6 @@ def prompt_choose_genres(current_selection):
                 print(f"Index {tok} is out of range, ignoring.")
         return chosen
     else:
-        # treat as names — accept case-insensitive; warn if name not in available
         chosen = []
         lower_map = {g.lower(): g for g in available}
         for tok in tokens:
@@ -202,6 +197,7 @@ def filter_menu():
     min_rating = None
     genre_match_all = False  # False = ANY (OR), True = ALL (AND)
 
+#Filters 
     while True:
         print("\n--- Filter Menu ---")
         print(f" Current genres: {selected_genres or 'none'}")
@@ -265,6 +261,7 @@ def filter_menu():
             clear_terminal()
             print("Invalid choice, try again!")
 
+# Select Menu
 def main_menu():
     print("=" * 60)
     print("🎬  Welcome to the Movie Selector  🎬")
@@ -274,6 +271,7 @@ def main_menu():
     print("3. Exit")
     print("=" * 60)
 
+#Exit
 def main():
     clear_terminal()
     try:
