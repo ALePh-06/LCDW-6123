@@ -123,7 +123,7 @@ def prompt_choose_genres(current_selection):
     """Let user pick genres by name or by index from available list."""
     available = get_available_genres()
     if not available:
-        print("No genres found in Database.")
+        print("No genres found in database.")
         return []
 
     print("\nAvailable genres:")
@@ -166,7 +166,7 @@ def prompt_choose_years(current_selection):
     available = get_available_years()
     if not available:
         clear_terminal()
-        print("No years found in DB.")
+        print("No years found in database.") # This passage flash when user placing wrong input
         return []
     clear_terminal()
     print("\nAvailable years:")
