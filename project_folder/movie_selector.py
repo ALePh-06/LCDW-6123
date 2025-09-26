@@ -132,7 +132,7 @@ def prompt_choose_genres(current_selection):
             if 0 <= idx < len(available):
                 chosen.append(available[idx])
             else:
-                print(f"Index {tok} is out of range, ignoring.")
+                print(f"Index {tok} is out of range.")
         return chosen
     else:
         chosen = []
@@ -144,7 +144,7 @@ def prompt_choose_genres(current_selection):
                 clear_terminal()
             else:
                 clear_terminal()
-                print(f"Genre '{tok}' not found — ignoring.")
+                print(f"Genre '{tok}' not found.")
         return chosen
 
 def prompt_choose_years(current_selection):
